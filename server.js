@@ -13,12 +13,12 @@
   var genuuid = require('./controllers/uuid');
   app.use(session({
     genid: function(req) {return genuuid();},
-    secret: 'charlie loves chocolate'
+    secret: 'shhh! no one can know'
   }));
 
   // --- Database ---
   var mongojs = require('mongojs');
-  var db = mongojs( process.env.MONGOLAB_URI || 'golden-'+process.env.GOLDEN_NODE_ENV, ['customers', 'venues', 'menus']);
+  var db = mongojs( process.env.MONGOLAB_URI || 'black-tie-'+process.env.GOLDEN_NODE_ENV, ['temp']);
   var bodyParser = require('body-parser');
   app.use(bodyParser.urlencoded({'extended':'true'}));
 
@@ -31,12 +31,8 @@
 
   app.get('/', function(req, res) {
     var sess = req.session;
-    if (sess.user) {
-      res.sendFile(root+'menuApp.html');
-    }
-    else {
-      res.sendFile(root+'login.html');
-    }
+
+
   });
 
 }());
