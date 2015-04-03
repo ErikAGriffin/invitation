@@ -38,7 +38,8 @@
     var sess = req.session;
     var params = req.params;
 
-    res.sendFile(root+'login.html');
+//     res.sendFile(root+'login.html');
+    res.send(params.userHash);
 
   });
 
