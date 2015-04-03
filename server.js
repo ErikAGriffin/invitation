@@ -7,6 +7,8 @@
   var port = process.env.PORT || 3000;
 
   app.use(express.static(root));
+  app.set('view engine', 'ejs');
+  app.set('views', root );
 
   // --- Express Session ---
   var session = require('express-session');
@@ -51,7 +53,7 @@
         console.log('You found me!');
         db.codes.remove({id:params.userHash});
         db.customers.insert({id:params.userHash}, errCheck);
-        res.sendFile(root+'login.html');
+        res.render('login', {hash: params.userHash});
       }
       else {
         db.customers.findOne({id:params.userHash}, function(err,doc) {
