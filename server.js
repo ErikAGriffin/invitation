@@ -34,9 +34,37 @@
   });
 
 
+  // --- Routes ---
+
   app.get('/', function(req, res) {
     var sess = req.session;
     res.sendFile(root+'default.html');
+  });
+
+  app.post('/createuser', function(req, res) {
+    var params = req.params;
+    var errCheck = function(err,docs) {
+      if(err) {return console.error(err);}
+      console.log('User created');
+    };
+
+    console.log('--- '+params.password);
+    console.log('--- '+params.confirmation);
+
+    if (params.password === params.confirmation) {
+      console.log('Password match!');
+      db.codes.remove({id:params.user});
+      db.customers.insert({id:params.user, password:params.password}, errCheck);
+      res.send('Success!');
+    }
+    else {
+      res.redirect('/user/'+params.user);
+    }
+
+
+
+
+
   });
 
 
@@ -51,8 +79,6 @@
     db.codes.findOne({id:params.userHash}, function(err, doc) {
       if(doc) {
         console.log('You found me!');
-        db.codes.remove({id:params.userHash});
-        db.customers.insert({id:params.userHash}, errCheck);
         res.render('login', {hash: params.userHash});
       }
       else {
@@ -84,6 +110,7 @@
     };
 
     db.codes.remove({});
+    db.customers.remove({});
 
     for(var i=0;i<20;i++) {
       secret = genuuid();

@@ -7,10 +7,21 @@
 
   <body>
 
-    <input name="user" type="hidden" value=<%= hash %> />
 
 
-    <input type="password" name="password" />
+    <form action="/createuser" method="POST">
+
+      <input name="user" type="hidden" value=<%= hash %> />
+
+
+      <input type="password" name="password" />
+
+      <input type="password" name="confirmation" />
+
+      <input type="submit" />
+
+    </form>
+
 
 
   </body>
