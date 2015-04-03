@@ -18,9 +18,12 @@
 
   // --- Database ---
   var mongojs = require('mongojs');
-  var db = mongojs( process.env.MONGOLAB_URI || 'black-tie-'+process.env.GOLDEN_NODE_ENV, ['temp']);
+  var db = mongojs( process.env.MONGOLAB_URI || 'black-tie-'+process.env.GOLDEN_NODE_ENV, ['codes','customers','admin']);
   var bodyParser = require('body-parser');
   app.use(bodyParser.urlencoded({'extended':'true'}));
+
+  // --- bcrypt ---
+  var bcrypt = require('./controllers/bcrypt');
 
 
   // --- Server Start ---
@@ -34,11 +37,50 @@
     res.sendFile(root+'default.html');
   });
 
+
   app.get('/user/:userHash', function(req, res) {
     var sess = req.session;
     var params = req.params;
 
+    bcrypt.checkUser(params.userHash, function(hash) {
+      db.codes.findOne({id:hash}, function(err, doc){
+        if(doc) {
+          console.log('Hey you found me!');
+        }
+        else {
+          console.log('no luck');
+        }
+      });
+    });
+
     res.sendFile(root+'login.html');
+  });
+
+
+  // --- Admin side ---
+
+  app.get('/new-event', function(req, res) {
+    var temp = "<article>";
+    var secret = "";
+    var errCheck = function(err,docs) {
+      if(err) {return console.error(err);}
+      console.log('Secret created');
+    };
+    var callback = function(hash) {
+      db.codes.insert({id:hash}, errCheck);
+    };
+
+    db.codes.remove({});
+
+
+    for(var i=0;i<20;i++) {
+      secret = genuuid();
+      bcrypt.createCode(secret, callback);
+      temp = temp + secret +"</article><article>";
+    }
+    temp = temp+"</article>";
+
+    res.send(temp);
 
   });
 
