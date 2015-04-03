@@ -31,7 +31,14 @@
 
   app.get('/', function(req, res) {
     var sess = req.session;
+    res.sendFile(root+'first.html');
+  });
 
+  app.get('/user/:userHash', function(req, res) {
+    var sess = req.session;
+    var params = req.params;
+
+    res.sendFile(root+'login.html');
 
   });
 

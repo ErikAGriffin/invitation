@@ -1,5 +1,5 @@
 {
-  "name": "golden-ticket",
+  "name": "black-tie",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ErikAGriffin/golden-ticket.git"
+    "url": ""
   },
-  "author": "Erik Griffin",
+  "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ErikAGriffin/golden-ticket/issues"
+    "url": ""
   },
-  "homepage": "https://github.com/ErikAGriffin/golden-ticket",
+  "homepage": "",
   "dependencies": {
     "bcrypt": "^0.8.2",
     "body-parser": "^1.12.2",
