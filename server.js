@@ -41,19 +41,31 @@
   app.get('/user/:userHash', function(req, res) {
     var sess = req.session;
     var params = req.params;
+    var errCheck = function(err,docs) {
+      if(err) {return console.error(err);}
+      console.log('User created');
+    };
 
-    bcrypt.checkUser(params.userHash, function(hash) {
-      db.codes.findOne({id:hash}, function(err, doc){
-        if(doc) {
-          console.log('Hey you found me!');
-        }
-        else {
-          console.log('no luck');
-        }
-      });
+    db.codes.findOne({id:params.userHash}, function(err, doc) {
+      if(doc) {
+        console.log('You found me!');
+        db.codes.remove({id:params.userHash});
+        db.customers.insert({id:params.userHash}, errCheck);
+        res.sendFile(root+'login.html');
+      }
+      else {
+        db.customers.findOne({id:params.userHash}, function(err,doc) {
+          if(doc) {
+            console.log('Welcome Back');
+            res.send('It\'s really working');
+          }
+          else {
+            console.log('no luck');
+            res.send('404 Not Invited');
+          }
+        });
+      }
     });
-
-    res.sendFile(root+'login.html');
   });
 
 
@@ -66,16 +78,12 @@
       if(err) {return console.error(err);}
       console.log('Secret created');
     };
-    var callback = function(hash) {
-      db.codes.insert({id:hash}, errCheck);
-    };
 
     db.codes.remove({});
 
-
     for(var i=0;i<20;i++) {
       secret = genuuid();
-      bcrypt.createCode(secret, callback);
+      db.codes.insert({id:secret}, errCheck);
       temp = temp + secret +"</article><article>";
     }
     temp = temp+"</article>";

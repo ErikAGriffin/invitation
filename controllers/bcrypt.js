@@ -26,7 +26,6 @@ var bcrypt = require('bcrypt');
   };
 
   module.exports.testUser = createCode;
-  module.exports.checkUser = checkUser;
 
 
 }());
