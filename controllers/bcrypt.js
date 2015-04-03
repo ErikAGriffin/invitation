@@ -17,6 +17,12 @@ var bcrypt = require('bcrypt');
     });
   };
 
+  var checkUser = function(userHash, callback) {
+    bcrypt.hash(userHash, 10, function(err,hash) {
+      callback(hash);
+    });
+  };
+
 
   var somethingElse = function(entered, stored, callback) {
 
@@ -25,7 +31,7 @@ var bcrypt = require('bcrypt');
     });
   };
 
-  module.exports.testUser = createCode;
+  module.exports.createCode = createCode;
   module.exports.checkUser = checkUser;
 
 

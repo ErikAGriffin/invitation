@@ -67,7 +67,11 @@
       console.log('Secret created');
     };
     var callback = function(hash) {
+      console.log('First hash is  '+hash);
       db.codes.insert({id:hash}, errCheck);
+    };
+    var callback2 = function(hash) {
+      console.log('Second hash is '+hash);
     };
 
     db.codes.remove({});
@@ -76,6 +80,7 @@
     for(var i=0;i<20;i++) {
       secret = genuuid();
       bcrypt.createCode(secret, callback);
+      bcrypt.checkUser(secret, callback2);
       temp = temp + secret +"</article><article>";
     }
     temp = temp+"</article>";
