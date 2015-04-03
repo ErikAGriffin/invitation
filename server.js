@@ -42,14 +42,11 @@
   });
 
   app.post('/createuser', function(req, res) {
-    var params = req.params;
+    var params = req.body;
     var errCheck = function(err,docs) {
       if(err) {return console.error(err);}
       console.log('User created');
     };
-
-    console.log('--- '+params.password);
-    console.log('--- '+params.confirmation);
 
     if (params.password === params.confirmation) {
       console.log('Password match!');
