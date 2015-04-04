@@ -11,7 +11,7 @@
   <body>
 
 
-    <section ng-controller="NewUserController as newCtrl" ng-show="<%= registered %>">
+    <section ng-controller="NewUserController as newCtrl" ng-hide="<%= registered %>">
 
       <h1>{{newCtrl.header}}</h1>
 
@@ -20,11 +20,13 @@
         <input name="user" type="hidden" value="<%= hash %>" />
 
 
+        <p>{{newCtrl.instruction}}</p>
+
+
         <input type="password" ng-hide="newCtrl.ready" name="password" ng-model="password" ng-minlength="5" required />
 
         <input type="password" ng-show="newCtrl.ready" name="confirmation" ng-model="confirmation" required />
 
-        <p>{{newCtrl.instruction}}</p>
 
 
         <button type="button" ng-show="!newCtrl.ready" ng-click="newUserForm.password.$valid && newCtrl.makeReady()">something</button>
@@ -34,6 +36,26 @@
         <button type="button" ng-hide="!newCtrl.ready || (newUserForm.$valid && password === confirmation)" ng-click="loginCtrl.displayError()">Suubmit</button>
 
       </form>
+    </section>
+
+
+
+
+    <section ng-controller="LoginController as loginCtrl" ng-show="<%= registered %>">
+
+      <h1>A countdown will go here.</h1>
+
+      <form name="loginForm" ng-show="false" novalidate>
+
+        <input name="user" type="hidden" value="<%= hash %>" />
+
+        <input type="password" name="password" required />
+
+        <input type="submit" ng-show="loginForm.$valid" />
+        <button type="button" ng-hide="loginForm.$valid" />
+
+      </form>
+
     </section>
 
 

@@ -25,15 +25,14 @@
     };
 
 
+  });
 
 
+  app.controller('LoginController', function() {
 
 
 
   });
-
-
-
 
 
 

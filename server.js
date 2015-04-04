@@ -36,10 +36,14 @@
 
   // --- Routes ---
 
+  // --- No Scan ---
+
   app.get('/', function(req, res) {
     var sess = req.session;
     res.sendFile(root+'default.html');
   });
+
+  // --- Create User ---
 
   app.post('/createuser', function(req, res) {
     var params = req.body;
@@ -57,24 +61,33 @@
     else {
       res.redirect('/user/'+params.user);
     }
-
-
-
-
-
   });
 
 
+  // --- Login Page ---
+
   app.get('/user/:userHash', function(req, res) {
+    var sess = req.session;
     var params = req.params;
     var errCheck = function(err,docs) {
       if(err) {return console.error(err);}
       console.log('User created');
     };
 
+    if(sess.admin) {
+      console.log('admin!');
+      db.customers.findOne({id:params.userHash}, function(err,doc) {
+        if(doc) {
+          db.customers.remove({id:params.userHash});
+          res.render('ticketcheck', {valid:true});}
+        else {res.render('ticketcheck', {valid:false});}
+      });
+      return;
+    }
+
     db.codes.findOne({id:params.userHash}, function(err, doc) {
       if(doc) {
-        console.log('You found me!');
+        console.log('New User!');
         res.render('login', {hash: params.userHash, registered: false});
       }
       else {
@@ -96,6 +109,13 @@
 
 
   // --- Admin side ---
+
+  app.get('/adminpage', function(req, res) {
+    var sess = req.session;
+    sess.admin = "abc123";
+    res.send('Logged in');
+
+  });
 
   app.get('/new-event', function(req, res) {
     var temp = "<article>";
