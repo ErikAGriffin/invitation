@@ -116,12 +116,23 @@
 
   // --- Admin side ---
 
+  // Can people simply add their own cookies?
+  // So that they could just create and admin
+  // cookie and act as admin?  If (probably)
+  // so, need to make the session a password.
+
   app.get('/adminpage', function(req, res) {
     var sess = req.session;
     sess.admin = "abc123";
-    res.send('Logged in');
-
+    res.sendFile(root+'admin.html');
   });
+
+  app.get('/adminlogout', function(req, res) {
+    var sess = req.session;
+    delete sess.admin;
+    res.redirect('/');
+  });
+
 
   app.get('/new-event', function(req, res) {
     var temp = "<article>";
@@ -142,7 +153,8 @@
     temp = temp+"</article>";
 
     res.send(temp);
-
   });
+
+
 
 }());
