@@ -66,7 +66,6 @@
 
 
   app.get('/user/:userHash', function(req, res) {
-    var sess = req.session;
     var params = req.params;
     var errCheck = function(err,docs) {
       if(err) {return console.error(err);}
@@ -76,13 +75,13 @@
     db.codes.findOne({id:params.userHash}, function(err, doc) {
       if(doc) {
         console.log('You found me!');
-        res.render('login', {hash: params.userHash});
+        res.render('login', {hash: params.userHash, registered: false});
       }
       else {
         db.customers.findOne({id:params.userHash}, function(err,doc) {
           if(doc) {
             console.log('Welcome Back');
-            res.send('It\'s really working');
+            res.render('login', {hash: params.userHash, registered: true});
           }
           else {
             console.log('no luck');
