@@ -38,6 +38,7 @@
 
   // --- No Scan ---
 
+  // Custom 404 pages in node?
   app.get('/', function(req, res) {
     var sess = req.session;
     res.sendFile(root+'default.html');
@@ -55,7 +56,7 @@
     if (params.password === params.confirmation) {
       console.log('Password match!');
       db.codes.remove({id:params.user});
-      db.customers.insert({id:params.user, password:params.password}, errCheck);
+      db.customers.insert({id:params.user, password:params.password, entered:false}, errCheck);
       res.send('Success!');
     }
     else {
@@ -74,16 +75,21 @@
       console.log('User created');
     };
 
+    // -- Ticket Scan --
+
     if(sess.admin) {
       console.log('admin!');
       db.customers.findOne({id:params.userHash}, function(err,doc) {
         if(doc) {
+          // Rather do this, update entered: true
           db.customers.remove({id:params.userHash});
           res.render('ticketcheck', {valid:true});}
         else {res.render('ticketcheck', {valid:false});}
       });
       return;
     }
+
+    // -- User Scan --
 
     db.codes.findOne({id:params.userHash}, function(err, doc) {
       if(doc) {
